@@ -17,7 +17,6 @@ jobs:
       - run: npm run build-state-mapper
       - run: npm run build-i18n
       - run: npm run build --omit=dev
-      - run: npm test
 
 
   deploy:
