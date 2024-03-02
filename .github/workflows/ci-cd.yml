@@ -14,7 +14,9 @@ jobs:
           cache: 'npm'
 
       - run: npm ci
-      - run: npm run build --if-present
+      - run: npm run build-state-mapper
+      - run: npm run build-i18n
+      - run: npm run build --omit=dev
       - run: npm test
 
 
