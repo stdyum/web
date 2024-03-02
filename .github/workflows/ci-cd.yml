@@ -1,0 +1,32 @@
+name: CI CD
+
+on: [ push ]
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'stable'
+          cache: 'npm'
+
+      - run: npm ci
+      - run: npm run build --if-present
+      - run: npm test
+
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [build-and-test]
+    steps:
+      - name: Deploying service
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          username: ${{ secrets.AWS_USER }}
+          host: ${{ secrets.AWS_HOST }}
+          key: ${{ secrets.AWS_KEY }}
+          port: 22
+          script: cd StudyumDeploy && ./update.sh frontend web
