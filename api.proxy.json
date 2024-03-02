@@ -1,0 +1,34 @@
+{
+  "/api/users/*": {
+    "target": "http://localhost:0100/",
+    "pathRewrite": {
+      "^/api/users": "api"
+    },
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/api/studyplaces/*": {
+    "target": "http://localhost:0200/",
+    "pathRewrite": {
+      "^/api/studyplaces": "api"
+    },
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/api/registry/*": {
+    "target": "http://localhost:0300/",
+    "pathRewrite": {
+      "^/api/registry": "api"
+    },
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/api/schedule/*": {
+    "target": "http://localhost:0400/",
+    "pathRewrite": {
+      "^/api/schedule": "api"
+    },
+    "secure": false,
+    "changeOrigin": true
+  }
+}

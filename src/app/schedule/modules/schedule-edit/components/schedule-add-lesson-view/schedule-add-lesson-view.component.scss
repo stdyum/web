@@ -1,0 +1,17 @@
+@import "indents";
+@import "actions";
+@import "themes";
+
+:host {
+  overflow: hidden;
+  width: unset;
+}
+
+container-secondary {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: $indent1;
+  width: 250px;
+  height: 100%;
+}

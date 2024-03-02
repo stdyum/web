@@ -1,0 +1,16 @@
+<wrapped-carousel
+  [matTooltip]="lessonTooltip()"
+  [itemHeight]="100"
+  [showActions]="!(control$ | async)?.pressed"
+>
+  @for (lesson of lessons; track lesson) {
+    <div *carouselItem class="item">
+      <schedule-lesson-actions *hasPermission="'editSchedule'" [lesson]="lesson" />
+      <schedule-lesson
+        [lesson]="lesson"
+        [routing]="instantRouting() || !!(control$ | async)?.pressed"
+        [showForeground]="$any(lesson).status === 'general' && !(control$ | async)?.pressed"
+      />
+    </div>
+  }
+</wrapped-carousel>

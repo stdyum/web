@@ -1,0 +1,13 @@
+@import "indents";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: $backgroundGap;
+  height: 100%;
+}
+
+schedule-view {
+  flex-grow: 1;
+  overflow: hidden;
+}

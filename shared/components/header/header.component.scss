@@ -1,0 +1,110 @@
+@import "themes";
+@import "indents";
+@import "typography";
+@import "breakpoints";
+
+container-primary {
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  padding: $indent1 $indent2;
+
+  @include theme {
+    color: $onPrimaryBackgroundColor;
+  }
+}
+
+.user-block {
+  display: flex;
+  gap: $indent2;
+}
+
+.icon-btn {
+  display: flex;
+  align-items: center;
+  gap: $indent1;
+  color: #eaeaea;
+  padding: $indentHalf $indent1;
+  border-radius: 5px;
+
+  icon {
+    height: $fontSizeSmall;
+    width: $fontSizeSmall;
+    font-size: $fontSizeSmall;
+  }
+}
+
+.login-btn {
+  @include theme {
+    background-color: $primaryColor;
+  }
+}
+
+.signup-btn {
+  @include theme {
+    background-color: $secondaryColor;
+  }
+}
+
+.right-wrapper {
+  display: flex;
+  flex-flow: row;
+
+  align-items: center;
+  gap: $indent3;
+
+  .nav-bar {
+    display: flex;
+    gap: $indent4;
+
+    @include sm {
+      display: none;
+    }
+  }
+
+  .nav-bar-sm {
+    display: none;
+
+    @include sm {
+      display: flex;
+    }
+  }
+}
+
+image {
+  width: 38px;
+  height: 38px;
+
+  border-radius: 25%;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: $indent2;
+
+  p1 {
+    @include sm {
+      display: none;
+    }
+  }
+}
+
+.logo-text {
+  place-self: center;
+  font-family: $font2;
+  @include sm {
+    display: none;
+  }
+}
+
+.logo-text-sm {
+  display: none;
+  @include sm {
+    display: block;
+  }
+}

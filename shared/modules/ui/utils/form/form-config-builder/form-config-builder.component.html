@@ -1,0 +1,119 @@
+@for (entries of formConfigEntries; track trackBy($index, entries)) {
+  @if (!entries[1].hidden) {
+    @switch (entries[1].type) {
+      @case (Types.TEXT) {
+        <text-input
+          [formControl]="getControlByName(entries[0])!"
+          [hint]="entries[1].typeConfig.hint"
+          [label]="entries[1].typeConfig.label"
+          [placeholder]="entries[1].typeConfig.placeholder"
+        />
+      }
+      @case (Types.NUMBER) {
+        <number-input
+          [formControl]="getControlByName(entries[0])!"
+          [hint]="entries[1].typeConfig.hint"
+          [label]="entries[1].typeConfig.label"
+          [placeholder]="entries[1].typeConfig.placeholder"
+        />
+      }
+      @case (Types.PASSWORD) {
+        <text-input
+          [formControl]="getControlByName(entries[0])!"
+          [hint]="entries[1].typeConfig.hint"
+          [label]="entries[1].typeConfig.label"
+          [placeholder]="entries[1].typeConfig.placeholder"
+          type="password"
+        />
+      }
+      @case (Types.FILE) {
+        TODO
+        <!--TODO-->
+      }
+      @case (Types.FILE_LIST) {
+        <file-list-select
+          [formControl]="getControlByName(entries[0])!"
+          [hint]="entries[1].typeConfig.hint"
+          [label]="entries[1].typeConfig.label"
+          [placeholder]="entries[1].typeConfig.placeholder"
+        />
+      }
+      @case (Types.CHECKBOX) {
+        TODO
+        <!--TODO-->
+      }
+      @case (Types.SELECT) {
+        <items-select
+          [formControl]="getControlByName(entries[0])!"
+          [hint]="entries[1].typeConfig.hint"
+          [items]="$any($any(entries[1]).typeConfig.items ?? [])"
+          [label]="entries[1].typeConfig.label"
+          [placeholder]="entries[1].typeConfig.placeholder"
+        />
+      }
+      @case (Types.SEARCHABLE_SELECT) {
+        <searchable-select
+          [formControl]="getControlByName(entries[0])!"
+          [hint]="entries[1].typeConfig.hint"
+          [items]="$any($any(entries[1]).typeConfig.items ?? [])"
+          [label]="entries[1].typeConfig.label"
+          [placeholder]="entries[1].typeConfig.placeholder"
+        />
+      }
+      @case (Types.AUTOCOMPLETE_TEXT) {
+        <autocomplete-text
+          [formControl]="getControlByName(entries[0])!"
+          [hint]="entries[1].typeConfig.hint"
+          [items]="$any($any(entries[1]).typeConfig.items ?? [])"
+          [label]="entries[1].typeConfig.label"
+          [placeholder]="entries[1].typeConfig.placeholder"
+        />
+      }
+      @case (Types.DATE_RANGE) {
+        <date-range-picker
+          [formControl]="getControlByName(entries[0])!"
+          [hint]="entries[1].typeConfig.hint"
+          [label]="entries[1].typeConfig.label"
+          [placeholder]="entries[1].typeConfig.placeholder"
+        />
+      }
+      @case (Types.TIME) {
+        <time-picker-view
+          [formControl]="getControlByName(entries[0])!"
+          [hint]="entries[1].typeConfig.hint"
+          [label]="entries[1].typeConfig.label"
+          [placeholder]="entries[1].typeConfig.placeholder"
+        />
+      }
+      @case (Types.DATE_TIME_RANGE) {
+        <date-time-range-picker
+          [formControl]="getControlByName(entries[0])!"
+          [hint]="entries[1].typeConfig.hint"
+          [label]="entries[1].typeConfig.label"
+          [placeholder]="entries[1].typeConfig.placeholder"
+        />
+      }
+      @case (Types.COLOR) {
+        <color-input
+          [formControl]="getControlByName(entries[0])!"
+          [hint]="entries[1].typeConfig.hint"
+          [label]="entries[1].typeConfig.label"
+          [placeholder]="entries[1].typeConfig.placeholder"
+        />
+      }
+      @case (Types.COLOR_SELECT) {
+        <color-select
+          [formControl]="getControlByName(entries[0])!"
+          [hint]="entries[1].typeConfig.hint"
+          [label]="entries[1].typeConfig.label"
+          [placeholder]="entries[1].typeConfig.placeholder"
+          [items]="$any($any(entries[1]).typeConfig.items ?? [])"
+        />
+      }
+      @default {
+        TODO
+        <!--TODO-->
+      }
+    }
+  }
+}

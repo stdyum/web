@@ -1,0 +1,17 @@
+@if (showForeground) {
+  <div class="not-updated-foreground"></div>
+}
+@if (!routing) {
+  <div class="foreground"></div>
+}
+<main [style.background-color]="lesson.primaryColor" [style.z-index]="routing ? 2 : ''">
+  <div [style.background]="lesson.secondaryColor" class="secondaryColorContainer"></div>
+  <head4
+    (click)="navigate(routerLink('subject'))"
+    class="subject-name"
+    [key]="lesson.subject.name"
+  />
+  <p1 (click)="navigate(routerLink('teacher'))" class="teacher-name" [key]="lesson.teacher.name" />
+  <p1 (click)="navigate(routerLink('room'))" class="room-name" [key]="lesson.room.name" />
+  <p1 (click)="navigate(routerLink('group'))" class="group-name" [key]="lesson.group.name" />
+</main>

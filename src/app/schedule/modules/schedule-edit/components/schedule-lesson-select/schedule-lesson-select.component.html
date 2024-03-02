@@ -1,0 +1,11 @@
+<text-input [formControl]="searchFormControl" label="search" />
+@if (searchedLessons$(); as lessons) {
+  <section>
+    <div (click)="select()" [matTooltip]="('addLesson' | translate).toString()" class="add">
+      <head2>+</head2>
+    </div>
+    @for (lesson of lessons; track lesson) {
+      <schedule-lesson (click)="select(lesson)" [lesson]="lesson" />
+    }
+  </section>
+}

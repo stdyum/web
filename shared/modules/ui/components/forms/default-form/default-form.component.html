@@ -1,0 +1,16 @@
+<head1 [key]="key">{{ text }}</head1>
+<div>
+  <form (ngSubmit)="submit()" [formGroup]="form">
+    <ng-content></ng-content>
+    @if (formConfig) {
+      <simple-form-config-builder [config]="formConfig" [formGroup]="form" />
+    }
+    <primary-button key="confirm" />
+  </form>
+  @if (character) {
+    <character [position]="character" />
+  }
+</div>
+@if (link) {
+  <url [key]="linkKey ?? ''" [link]="link">{{ linkText }}</url>
+}

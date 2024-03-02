@@ -1,0 +1,19 @@
+:host {
+  display: flex;
+}
+
+:host::ng-deep mat-form-field.hideBottomSpace .mat-mdc-form-field-bottom-align {
+  display: none;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-hint {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+input[type="number"]::-webkit-inner-spin-button {
+  display: none;
+}

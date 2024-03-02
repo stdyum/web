@@ -1,0 +1,30 @@
+@if (label) {
+  <mat-label>{{ label | translate }}</mat-label>
+}
+<label>
+  <main
+    class="drop-area"
+    (drop)="onDrop($event)"
+    (dragover)="dragEvent($event)"
+    (dragenter)="dragEvent($event)"
+    (dragleave)="dragEvent($event)"
+    (dragend)="dragEvent($event)"
+  >
+    <head3 [key]="placeholder ?? 'dropFiles'" />
+  </main>
+  <input type="file" (input)="fileSelect($event)" multiple />
+</label>
+<section class="items">
+  @if (control.valueChanges | async; as value) {
+    @for (file of value; track file) {
+      <file-preview [file]="file" (deleteFile)="deleteFile($event)" />
+    } @empty {
+      <head4 key="noSelectedFiles" />
+    }
+  } @else {
+    <head4 key="noSelectedFiles" />
+  }
+</section>
+@if (hint) {
+  <mat-hint>{{ hint | translate }}</mat-hint>
+}
