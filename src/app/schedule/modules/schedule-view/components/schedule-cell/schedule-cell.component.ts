@@ -41,9 +41,9 @@ export class ScheduleCellComponent implements OnInit {
 
   lessonTooltip(): string {
     const lesson = this.lessons[0];
-    return 'startTime' in lesson
-      ? this.scheduleLessonTooltip(lesson)
-      : this.scheduleGeneralLessonTooltip(lesson);
+    return 'dayIndex' in lesson
+      ? this.scheduleGeneralLessonTooltip(lesson)
+      : this.scheduleLessonTooltip(lesson);
   }
 
   scheduleLessonTooltip(lesson: ScheduleLesson): string {
@@ -53,6 +53,6 @@ export class ScheduleCellComponent implements OnInit {
 
   scheduleGeneralLessonTooltip(lesson: ScheduleGeneralLesson): string {
     const f = 'h:mm a';
-    return `${lesson.endTimeMinutes.toFormat(f)}-${lesson.startTimeMinutes.toFormat(f)}`;
+    return `${lesson.endTime.toFormat(f)}-${lesson.startTime.toFormat(f)}`;
   }
 }

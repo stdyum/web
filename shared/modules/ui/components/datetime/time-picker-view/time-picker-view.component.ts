@@ -28,10 +28,10 @@ export interface Time {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TimePickerViewComponent extends MatFormControlValueAccessorComponent<Time> {
-  rawControl = new FormControl<string | null>('');
+  rawTextControl = new FormControl<string | null>('');
 
   override registerOnChange(fn: (v: Time | null) => void): void {
-    this.changeSubscription = this.rawControl.valueChanges
+    this.changeSubscription = this.rawTextControl.valueChanges
       .pipe(map(v => `${v}`))
       .pipe(map(v => v.split(':')))
       .pipe(filter(v => v.length == 2 && !!v[0] && !!v[1]))
@@ -44,6 +44,6 @@ export class TimePickerViewComponent extends MatFormControlValueAccessorComponen
     if (!value) return;
 
     const addTrailZero = (v: number) => (v >= 10 ? `${v}` : `0${v}`);
-    this.rawControl.setValue(`${addTrailZero(value.hours)}:${addTrailZero(value.minutes)}`);
+    this.rawTextControl.setValue(`${addTrailZero(value.hours)}:${addTrailZero(value.minutes)}`);
   }
 }

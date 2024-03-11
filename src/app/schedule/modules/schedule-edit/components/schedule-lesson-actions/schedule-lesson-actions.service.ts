@@ -28,19 +28,23 @@ export class ScheduleLessonActionsService {
   }
 
   addLesson(
-    dto: ScheduleAddLessonFormData | ScheduleAddGeneralLessonFormData
+    dto: ScheduleAddLessonFormData | ScheduleAddGeneralLessonFormData,
+    lesson: ScheduleLesson
   ): Observable<ScheduleLesson | ScheduleGeneralLesson> {
-    return this.crudService.post(dto);
+    return this.crudService.postList([dto], {}, lesson);
   }
 
   editLesson(
     id: string,
-    dto: ScheduleAddLessonFormData | ScheduleAddGeneralLessonFormData
+    dto: ScheduleAddLessonFormData | ScheduleAddGeneralLessonFormData,
+    lesson: ScheduleLesson
   ): Observable<ScheduleLesson | ScheduleGeneralLesson> {
-    return this.crudService.put(id, dto);
+    return this.crudService.put(id, dto, {}, lesson);
   }
 
   deleteLesson(lesson: ScheduleLesson | ScheduleGeneralLesson): Observable<void> {
-    return this.crudService.delete(lesson.id!, lesson);
+    const query = 'dayIndex' in lesson ? { dayIndex: lesson.dayIndex } : { date: lesson.startTime };
+
+    return this.crudService.delete(lesson.id!, query, lesson);
   }
 }

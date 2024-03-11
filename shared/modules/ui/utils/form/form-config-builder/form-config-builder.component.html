@@ -7,6 +7,7 @@
           [hint]="entries[1].typeConfig.hint"
           [label]="entries[1].typeConfig.label"
           [placeholder]="entries[1].typeConfig.placeholder"
+          (onInit)="onInit(entries, $any($event))"
         />
       }
       @case (Types.NUMBER) {
@@ -15,6 +16,7 @@
           [hint]="entries[1].typeConfig.hint"
           [label]="entries[1].typeConfig.label"
           [placeholder]="entries[1].typeConfig.placeholder"
+          (onInit)="onInit(entries, $any($event))"
         />
       }
       @case (Types.PASSWORD) {
@@ -23,6 +25,7 @@
           [hint]="entries[1].typeConfig.hint"
           [label]="entries[1].typeConfig.label"
           [placeholder]="entries[1].typeConfig.placeholder"
+          (onInit)="onInit(entries, $any($event))"
           type="password"
         />
       }
@@ -36,6 +39,7 @@
           [hint]="entries[1].typeConfig.hint"
           [label]="entries[1].typeConfig.label"
           [placeholder]="entries[1].typeConfig.placeholder"
+          (onInit)="onInit(entries, $any($event))"
         />
       }
       @case (Types.CHECKBOX) {
@@ -49,6 +53,7 @@
           [items]="$any($any(entries[1]).typeConfig.items ?? [])"
           [label]="entries[1].typeConfig.label"
           [placeholder]="entries[1].typeConfig.placeholder"
+          (onInit)="onInit(entries, $any($event))"
         />
       }
       @case (Types.SEARCHABLE_SELECT) {
@@ -58,6 +63,7 @@
           [items]="$any($any(entries[1]).typeConfig.items ?? [])"
           [label]="entries[1].typeConfig.label"
           [placeholder]="entries[1].typeConfig.placeholder"
+          (onInit)="onInit(entries, $any($event))"
         />
       }
       @case (Types.AUTOCOMPLETE_TEXT) {
@@ -67,6 +73,7 @@
           [items]="$any($any(entries[1]).typeConfig.items ?? [])"
           [label]="entries[1].typeConfig.label"
           [placeholder]="entries[1].typeConfig.placeholder"
+          (onInit)="onInit(entries, $any($event))"
         />
       }
       @case (Types.DATE_RANGE) {
@@ -75,6 +82,7 @@
           [hint]="entries[1].typeConfig.hint"
           [label]="entries[1].typeConfig.label"
           [placeholder]="entries[1].typeConfig.placeholder"
+          (onInit)="onInit(entries, $any($event))"
         />
       }
       @case (Types.TIME) {
@@ -83,6 +91,7 @@
           [hint]="entries[1].typeConfig.hint"
           [label]="entries[1].typeConfig.label"
           [placeholder]="entries[1].typeConfig.placeholder"
+          (onInit)="onInit(entries, $any($event))"
         />
       }
       @case (Types.DATE_TIME_RANGE) {
@@ -91,6 +100,7 @@
           [hint]="entries[1].typeConfig.hint"
           [label]="entries[1].typeConfig.label"
           [placeholder]="entries[1].typeConfig.placeholder"
+          (onInit)="onInit(entries, $any($event))"
         />
       }
       @case (Types.COLOR) {
@@ -99,6 +109,7 @@
           [hint]="entries[1].typeConfig.hint"
           [label]="entries[1].typeConfig.label"
           [placeholder]="entries[1].typeConfig.placeholder"
+          (onInit)="onInit(entries, $any($event))"
         />
       }
       @case (Types.COLOR_SELECT) {
@@ -108,6 +119,7 @@
           [label]="entries[1].typeConfig.label"
           [placeholder]="entries[1].typeConfig.placeholder"
           [items]="$any($any(entries[1]).typeConfig.items ?? [])"
+          (onInit)="onInit(entries, $any($event))"
         />
       }
       @default {

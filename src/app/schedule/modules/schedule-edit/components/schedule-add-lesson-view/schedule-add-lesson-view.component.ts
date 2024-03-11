@@ -25,7 +25,7 @@ export class ScheduleAddLessonViewComponent {
       .open(ScheduleAddLessonDialogComponent, { data: template })
       .afterClosed()
       .pipe(filterNotNull())
-      .pipe(switchMap(lesson => this.service.addLesson(lesson)))
+      .pipe(switchMap(data => this.service.addLesson(data.dto, data.lesson)))
       .subscribe();
   }
 }

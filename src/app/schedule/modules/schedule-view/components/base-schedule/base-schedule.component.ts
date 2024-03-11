@@ -20,15 +20,4 @@ export class BaseScheduleComponent implements OnInit {
     this.service.reset();
     this.modeCalculator$ = this.service.modeCalculator$;
   }
-
-  groupLessonByTime(lesson: ScheduleLesson | ScheduleGeneralLesson): string {
-    const groupScheduleLessonByTime = (lesson: ScheduleLesson): string =>
-      `${lesson.startTime.toISO()}-${lesson.endTime.toISO()}`;
-
-    const groupGeneralScheduleLessonByTime = (lesson: ScheduleGeneralLesson): string =>
-      `${lesson.startTimeMinutes.toISO()}-${lesson.endTimeMinutes.toISO()}`;
-    return 'startTime' in lesson
-      ? groupScheduleLessonByTime(lesson)
-      : groupGeneralScheduleLessonByTime(lesson);
-  }
 }

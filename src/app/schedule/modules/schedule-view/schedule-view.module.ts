@@ -26,6 +26,7 @@ import { SkeletonLoaderComponent } from '@shared/components/skeleton-loader/skel
 import { SkeletonPlugComponent } from '@shared/components/skeleton-plug/skeleton-plug.component';
 import { PrimaryContainerComponent } from '@shared/modules/ui/components/containers/primary-container.component';
 import { DefaultStateDirective, LoadedStateDirective, StateMapperComponent } from 'state-mapper';
+import { ScheduleModeGroupLessonsPipe } from '@schedule/modules/schedule-view/components/base-schedule/mode-calculators/schedule-mode-group-lessons.pipe';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { DefaultStateDirective, LoadedStateDirective, StateMapperComponent } fro
     ScheduleCellPositionDirective,
     SchedulePlugComponent,
     ScheduleViewComponent,
+    ScheduleModeGroupLessonsPipe,
   ],
   imports: [
     CommonModule,

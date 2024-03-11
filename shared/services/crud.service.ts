@@ -9,47 +9,61 @@ export const CRUD_URL_TOKEN = new InjectionToken<string>('crud url');
 @Injectable()
 export class CrudService<T, DTO = T, ID = string> {
   protected schema: z.Schema | null = null;
-  protected onAction: { [key: string]: (response: any, request: any) => void } = {};
+  protected query: any = {};
+  protected onAction: { [key: string]: (response: any, request: any, data: any) => void } = {};
   private http = inject(HttpClient);
 
   constructor(@Inject(CRUD_URL_TOKEN) protected url: string) {}
 
-  list(): Observable<T[]> {
+  list(query: any = {}, data: any = null): Observable<T[]> {
     return this.http
-      .get<T[]>(this.url)
+      .get<T[]>(this.url, { params: this.concatQuery(query) })
       .pipe(validate(z.array(this.schema ?? z.any())))
-      .pipe(this.applyAction('LIST'));
+      .pipe(this.applyAction('LIST', null, data));
   }
 
-  get(id: ID): Observable<T> {
+  get(id: ID, query: any = {}, data: any = null): Observable<T> {
     return this.http
-      .get<T>(`${this.url}/${id}`)
+      .get<T>(`${this.url}/${id}`, { params: this.concatQuery(query) })
       .pipe(validate(this.schema))
-      .pipe(this.applyAction('GET'));
+      .pipe(this.applyAction('GET', null, data));
   }
 
-  put(id: ID, dto: DTO, previous: T | null = null): Observable<T> {
+  put(id: ID, dto: DTO, query: any = {}, data: any = null): Observable<T> {
     return this.http
-      .put<T>(`${this.url}/${id}`, dto)
-      .pipe(validate(this.schema))
-      .pipe(this.applyAction('PUT', previous));
+      .put<T>(this.url, { ...dto, id: id }, { params: this.concatQuery(query) })
+      .pipe(this.applyAction('PUT', { ...dto, id: id }, data));
   }
 
-  post(dto: DTO): Observable<T> {
+  post(dto: DTO, query: any = {}, data: any = null): Observable<T> {
     return this.http
-      .post<T>(this.url, dto)
+      .post<T>(this.url, dto, { params: this.concatQuery(query) })
       .pipe(validate(this.schema))
-      .pipe(this.applyAction('POST'));
+      .pipe(this.applyAction('POST', dto, data));
   }
 
-  delete(id: ID, previous: T | null = null): Observable<void> {
-    return this.http.delete<void>(`${this.url}/${id}`).pipe(this.applyAction('DELETE', previous));
+  postList(dto: DTO[], query: any = {}, data: any = null): Observable<T> {
+    return this.http
+      .post<T>(this.url, { list: dto }, { params: this.concatQuery(query) })
+      .pipe(validate(this.schema))
+      .pipe(this.applyAction('POST', dto, data));
   }
 
-  private applyAction<O, T>(
+  delete(id: ID, query: any = {}, previous: T | null = null, data: any = null): Observable<void> {
+    return this.http
+      .delete<void>(`${this.url}/${id}`, { params: this.concatQuery(query) })
+      .pipe(this.applyAction('DELETE', previous, data));
+  }
+
+  private applyAction<O, T, D>(
     action: string,
-    previous: T | null = null
+    previous: T | null = null,
+    data: D | null = null
   ): UnaryFunction<Observable<O>, Observable<O>> {
-    return tap(v => (this.onAction[action] ? this.onAction[action](v, previous) : null));
+    return tap(v => (this.onAction[action] ? this.onAction[action](v, previous, data) : null));
+  }
+
+  private concatQuery(query: any): any {
+    return { ...this.query, ...query };
   }
 }

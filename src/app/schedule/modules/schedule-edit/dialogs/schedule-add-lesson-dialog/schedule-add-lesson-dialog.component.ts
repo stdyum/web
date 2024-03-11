@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SearchScheduleFormData } from '@schedule/dialogs/search-schedule-dialog/search-schedule-dialog.dto';
 import { FormConfig, FormConfigElementTypes } from '@shared/modules/ui/entities/form.config';
@@ -7,7 +7,8 @@ import { DateTime } from 'luxon';
 import { ScheduleLesson } from '@schedule/entities/schedule';
 import { ScheduleAddLessonService } from '@schedule/modules/schedule-edit/dialogs/schedule-add-lesson-dialog/schedule-add-lesson-dialog.service';
 import { ScheduleAddLessonFormConfig } from '@schedule/modules/schedule-edit/dialogs/schedule-add-lesson-dialog/schedule-add-lesson-dialog.dto';
-import { provideTranslationGroup, provideTranslationSuffix } from 'i18n';
+import { provideTranslationGroup } from 'i18n';
+import { DefaultFormComponent } from '@ui/forms/default-form/default-form.component';
 
 @Component({
   selector: 'app-schedule-add-lesson-dialog',
@@ -16,14 +17,16 @@ import { provideTranslationGroup, provideTranslationSuffix } from 'i18n';
   providers: [provideTranslationGroup(['schedule', 'edit', 'addLesson'])],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ScheduleAddLessonDialogComponent implements OnInit {
+export class ScheduleAddLessonDialogComponent {
+  @ViewChild(DefaultFormComponent, { static: true })
+  public formComponent!: DefaultFormComponent<any, any, any>;
+
   private dialog = inject(MatDialogRef);
   private service = inject(ScheduleAddLessonService);
   private config = inject<ScheduleLesson | null>(MAT_DIALOG_DATA);
-
   formConfig: FormConfig<ScheduleAddLessonFormConfig> = {
     elements: {
-      subjectID: {
+      subjectId: {
         type: FormConfigElementTypes.SEARCHABLE_SELECT,
         typeConfig: {
           label: 'subject',
@@ -32,7 +35,7 @@ export class ScheduleAddLessonDialogComponent implements OnInit {
         initial: this.config?.subject?.id,
         validators: [Validators.required],
       },
-      teacherID: {
+      teacherId: {
         type: FormConfigElementTypes.SEARCHABLE_SELECT,
         typeConfig: {
           label: 'teacher',
@@ -41,7 +44,7 @@ export class ScheduleAddLessonDialogComponent implements OnInit {
         initial: this.config?.teacher?.id,
         validators: [Validators.required],
       },
-      groupID: {
+      groupId: {
         type: FormConfigElementTypes.SEARCHABLE_SELECT,
         typeConfig: {
           label: 'group',
@@ -50,7 +53,7 @@ export class ScheduleAddLessonDialogComponent implements OnInit {
         initial: this.config?.group?.id,
         validators: [Validators.required],
       },
-      roomID: {
+      roomId: {
         type: FormConfigElementTypes.SEARCHABLE_SELECT,
         typeConfig: {
           label: 'room',
@@ -89,8 +92,8 @@ export class ScheduleAddLessonDialogComponent implements OnInit {
         typeConfig: {
           label: 'range',
           expand: true,
-          startControlName: 'startDate',
-          endControlName: 'endDate',
+          startControlName: 'startTime',
+          endControlName: 'endTime',
         },
         initial: {
           start: this.config?.startTime,
@@ -102,11 +105,33 @@ export class ScheduleAddLessonDialogComponent implements OnInit {
     },
   };
 
-  ngOnInit(): void {
-    this.service.load();
-  }
-
   onSubmit(data: SearchScheduleFormData): void {
-    this.dialog.close(data);
+    const raw = this.formComponent.raw();
+
+    const lesson = <ScheduleLesson>{
+      subject: {
+        id: raw.subjectId.value,
+        name: raw.subjectId.display,
+      },
+      teacher: {
+        id: raw.teacherId.value,
+        name: raw.teacherId.display,
+      },
+      group: {
+        id: raw.groupId.value,
+        name: raw.groupId.display,
+      },
+      room: {
+        id: raw.roomId.value,
+        name: raw.roomId.display,
+      },
+      primaryColor: raw.primaryColor.value,
+      secondaryColor: raw.secondaryColor.value,
+      lessonIndex: raw.lessonIndex - 1,
+      startTime: raw.range.start,
+      endTime: raw.range.end,
+    };
+
+    this.dialog.close({ dto: data, lesson: lesson });
   }
 }

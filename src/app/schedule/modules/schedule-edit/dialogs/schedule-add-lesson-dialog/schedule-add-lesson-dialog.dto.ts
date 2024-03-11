@@ -5,22 +5,22 @@ import {
 import { DateTime } from 'luxon';
 
 export interface ScheduleAddLessonFormData {
-  subjectID?: string | null;
-  teacherID?: string | null;
-  groupID?: string | null;
-  roomID?: string | null;
+  subjectId?: string | null;
+  teacherId?: string | null;
+  groupId?: string | null;
+  roomId?: string | null;
   primaryColor?: string | null;
   secondaryColor?: string | null;
   lessonIndex?: number | null;
-  startDate?: DateTime | null;
-  endDate?: DateTime | null;
+  startTime?: DateTime | null;
+  endTime?: DateTime | null;
 }
 
 export interface ScheduleAddLessonFormConfig {
-  subjectID: FormConfigElement;
-  teacherID: FormConfigElement;
-  groupID: FormConfigElement;
-  roomID: FormConfigElement;
+  subjectId: FormConfigElement;
+  teacherId: FormConfigElement;
+  groupId: FormConfigElement;
+  roomId: FormConfigElement;
   primaryColor: FormConfigElement;
   secondaryColor: FormConfigElement;
   lessonIndex: FormConfigElement<number>;

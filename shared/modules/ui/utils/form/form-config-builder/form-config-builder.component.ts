@@ -35,6 +35,7 @@ import { FileListSelectComponent } from '@shared/modules/ui/components/files/fil
 import { Subscription, take } from 'rxjs';
 import { File } from '@shared/modules/ui/entities/file';
 import { HttpClient } from '@angular/common/http';
+import { MatFormControlValueAccessorComponent } from '@shared/modules/ui/utils/form/mat-form-control-value-accessor.component';
 
 @Component({
   selector: 'simple-form-config-builder',
@@ -63,6 +64,8 @@ export class FormConfigBuilderComponent<T extends FormConfigElements<T>>
 {
   @Input({ required: true }) config!: FormConfig<T>;
 
+  private controls: { [key: string]: MatFormControlValueAccessorComponent<any> } = {};
+
   formDirective = inject(FormGroupDirective);
 
   protected readonly Types = FormConfigElementTypes;
@@ -86,6 +89,21 @@ export class FormConfigBuilderComponent<T extends FormConfigElements<T>>
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(s => s.unsubscribe());
+  }
+
+  raw(): any {
+    return Object.fromEntries(
+      Object.entries(this.controls).map(([controlName, control]) => {
+        return [controlName, control.raw()];
+      })
+    );
+  }
+
+  onInit(
+    entries: [string, FormConfigElement<any>],
+    component: MatFormControlValueAccessorComponent<any>
+  ): void {
+    this.controls[entries[0]] = component;
   }
 
   private initFormControls(form: FormGroup): void {

@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, map, Observable, pipe, UnaryFunction } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, pipe, switchMap, UnaryFunction } from 'rxjs';
 import { filterNotNull } from '@shared/rxjs/pipes/filterNotNull.pipe';
 import { SelectItem, SelectItems } from '@shared/modules/ui/entities/select';
 import {
@@ -16,60 +16,89 @@ export class ScheduleAddLessonService {
   private http = inject(HttpClient);
   private studyPlacesService = inject(StudyPlacesService);
 
-  private _types$ = new BehaviorSubject<ScheduleTypes | null>(null);
-
-  get types$(): Observable<ScheduleTypes> {
-    return this._types$.pipe(filterNotNull());
-  }
-
   get subjects$(): Observable<SelectItems> {
-    return this.types$.pipe(ScheduleAddLessonService.mapTypesToSelectValues('subjects'));
+    return this.getType('subjects');
   }
 
   get teachers$(): Observable<SelectItems> {
-    return this.types$.pipe(ScheduleAddLessonService.mapTypesToSelectValues('teachers'));
+    return this.getType('teachers');
   }
 
   get groups$(): Observable<SelectItems> {
-    return this.types$.pipe(ScheduleAddLessonService.mapTypesToSelectValues('groups'));
+    return this.getType('groups');
   }
 
   get rooms$(): Observable<SelectItems> {
-    return this.types$.pipe(ScheduleAddLessonService.mapTypesToSelectValues('rooms'));
+    return this.getType('rooms');
   }
 
+  //todo get from backend
   get primaryColors$(): Observable<SelectItems> {
-    return this.studyPlacesService.userStudyPlace.pipe(map(s => s.primaryColorSet));
+    return of([
+      {
+        id: '#ffffff',
+        value: '#ffffff',
+        display: 'white',
+      },
+      {
+        id: '#99ff99',
+        value: '#99ff99',
+        display: 'lime',
+      },
+      {
+        id: '#9999ff',
+        value: '#9999ff',
+        display: 'purple',
+      },
+    ] as SelectItem[]).pipe();
   }
 
+  //todo
   get secondaryColors$(): Observable<SelectItems> {
-    return this.studyPlacesService.userStudyPlace.pipe(map(s => s.secondaryColorSet));
+    return of([
+      {
+        id: '#ffffff',
+        value: '#ffffff',
+        display: 'white',
+      },
+      {
+        id: '#99ff99',
+        value: '#99ff99',
+        display: 'lime',
+      },
+      {
+        id: '#9999ff',
+        value: '#9999ff',
+        display: 'purple',
+      },
+    ] as SelectItem[]).pipe();
   }
 
-  private static typeToSelectValue(type: ScheduleTypeEntry): SelectItem {
-    return {
-      id: type.id,
-      value: type.id,
-      display: type.title,
-    };
-  }
-
-  private static typesToSelectValues(types: ScheduleTypeEntry[]): SelectItems {
-    return types.map(ScheduleAddLessonService.typeToSelectValue);
-  }
-
-  private static mapTypesToSelectValues(
-    typeName: string
-  ): UnaryFunction<Observable<ScheduleTypes>, Observable<SelectItems>> {
-    return pipe(
-      map(v => v[typeName]),
-      map(ScheduleAddLessonService.typesToSelectValues)
-    );
-  }
-
-  load(): void {
-    this.http
-      .get<ScheduleTypes>(`api/v1/schedule/types`)
-      .subscribe(this._types$.next.bind(this._types$));
+  private getType(type: string): Observable<SelectItem[]> {
+    return this.studyPlacesService.userEnrollment
+      .pipe(
+        switchMap(e =>
+          this.http.get<{
+            items: { id: string; name: string }[];
+          }>(`api/registry/v1/${type}`, {
+            params: {
+              studyPlaceId: e.studyPlaceId,
+              perPage: 1000000, //todo use pagination
+            },
+          })
+        )
+      )
+      .pipe(
+        map(v =>
+          v.items.map(
+            i =>
+              <SelectItem>{
+                id: i.id,
+                value: i.id,
+                display: i.name,
+              }
+          )
+        )
+      );
   }
 }

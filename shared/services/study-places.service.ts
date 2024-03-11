@@ -17,7 +17,9 @@ export interface GetStudyPlacesParams extends Params {
 export class StudyPlacesService {
   private http = inject(HttpClient);
   private route = inject(ActivatedRoute);
+
   private _userStudyPlace: StudyPlace | null = null;
+  private _userEnrollment: any | null = null;
 
   get userStudyPlace(): Observable<any> {
     if (this._userStudyPlace) return of(this._userStudyPlace);
@@ -29,7 +31,12 @@ export class StudyPlacesService {
   }
 
   get userEnrollment(): Observable<any> {
-    return this.http.get<any>('api/studyplaces/v1/enrollments').pipe(map(e => e.items[0]));
+    if (this._userEnrollment) return of(this._userEnrollment);
+
+    return this.http
+      .get<any>('api/studyplaces/v1/enrollments')
+      .pipe(map(e => e.items[0]))
+      .pipe(tap(s => (this._userEnrollment = s)));
   }
 
   get currentID(): string | null {

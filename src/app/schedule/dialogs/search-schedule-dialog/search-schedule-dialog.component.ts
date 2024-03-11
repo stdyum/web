@@ -11,7 +11,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormConfig, FormConfigElementTypes } from '@shared/modules/ui/entities/form.config';
 import { DateTime } from 'luxon';
 import { CharacterComponent } from '@ui/images/character.component';
-import { environment } from '../../../../enviroments/environment';
 import { provideTranslationSuffix } from 'i18n';
 
 @Component({
@@ -29,37 +28,27 @@ export class SearchScheduleDialogComponent {
   private config = inject<SearchScheduleFormData>(MAT_DIALOG_DATA);
   formConfig: FormConfig<SearchScheduleFormConfig> = {
     elements: {
-      studyPlaceID: {
-        type: FormConfigElementTypes.SEARCHABLE_SELECT,
-        typeConfig: {
-          label: 'studyPlace',
-          items: this.service.studyPlaceList$,
-        },
-        initial: this.config.studyPlaceID!,
-        hidden: environment.standalone,
-        validators: [Validators.required],
-      },
-      type: {
+      column: {
         type: FormConfigElementTypes.SELECT,
         typeConfig: {
-          label: 'type',
+          label: 'column',
           items: ['group', 'teacher', 'subject', 'room'],
         },
-        initial: this.config.type!,
+        initial: this.config.column!,
         validators: [Validators.required],
       },
-      typename: {
+      columnId: {
         type: FormConfigElementTypes.SEARCHABLE_SELECT,
         typeConfig: {
-          label: 'typename',
+          label: 'columnName',
           items: [],
         },
         dependable: {
-          dependsOn: 'type',
+          dependsOn: 'column',
           cacheable: true,
           dependsItems: (item, value) => this.service.getTypeNames(item, value.studyPlaceID),
         },
-        initial: this.config.typename!,
+        initial: this.config.columnId!,
         validators: [Validators.required],
       },
       range: {

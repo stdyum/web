@@ -1,15 +1,16 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
 import { ScheduleAddLessonFormData } from '@schedule/modules/schedule-edit/dialogs/schedule-add-lesson-dialog/schedule-add-lesson-dialog.dto';
+import { LessonsService } from '@schedule/services/lessons.service';
+import { ScheduleLesson } from '@schedule/entities/schedule';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ScheduleAddLessonViewService {
-  private http = inject(HttpClient);
+  private scheduleLessonsService = inject(LessonsService);
 
-  addLesson(lesson: ScheduleAddLessonFormData): Observable<void> {
-    return this.http.post<void>('api/v1/schedule/lessons', lesson);
+  addLesson(dto: ScheduleAddLessonFormData, lesson: ScheduleLesson): Observable<ScheduleLesson> {
+    return this.scheduleLessonsService.postList([dto], {}, lesson);
   }
 }

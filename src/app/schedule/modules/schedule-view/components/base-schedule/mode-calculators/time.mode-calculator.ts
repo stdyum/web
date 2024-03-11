@@ -9,7 +9,8 @@ import {
   ScheduleGeneralLesson,
   ScheduleLesson,
 } from '@schedule/entities/schedule';
-import { DateTime, DurationLikeObject } from 'luxon';
+import { DateObjectUnits, DateTime, DurationLikeObject } from 'luxon';
+import { groupBy } from '@shared/arrays/groupBy';
 
 export class TimeModeCalculator implements IModeCalculator {
   private static scale = 2.25;
@@ -23,7 +24,15 @@ export class TimeModeCalculator implements IModeCalculator {
   private yOffset!: number;
 
   initSchedule(schedule: Schedule): void {
-    const dates = schedule.lessons.flatMap(v => [v.startTime, v.endTime]);
+    const datelessParams: DateObjectUnits = {
+      year: 0,
+      month: 0,
+      day: 0,
+    };
+    const dates = schedule.lessons.flatMap(v => [
+      v.startTime.set(datelessParams),
+      v.endTime.set(datelessParams),
+    ]);
 
     this.start = schedule.info.startDate;
     this.yOffset = this.yTime(
@@ -42,13 +51,21 @@ export class TimeModeCalculator implements IModeCalculator {
   }
 
   initGeneralSchedule(schedule: GeneralSchedule): void {
-    const dates = schedule.lessons.flatMap(v => [v.startTimeMinutes, v.endTimeMinutes]);
+    const datelessParams: DateObjectUnits = {
+      year: 0,
+      month: 0,
+      day: 0,
+    };
+    const dates = schedule.lessons.flatMap(v => [
+      v.startTime.set(datelessParams),
+      v.endTime.set(datelessParams),
+    ]);
 
     const dayIndexes = schedule.lessons.map(l => l.dayIndex);
     this.start = DateTime.fromMillis(0).set({ weekday: Math.min(...dayIndexes) - 1 });
 
     this.yOffset = this.yTime(
-      dates.reduce((a, b) => (a < b ? a : b), schedule.lessons[0].startTimeMinutes)
+      dates.reduce((a, b) => (a < b ? a : b), schedule.lessons[0].startTime)
     );
 
     this.days = [];
@@ -59,6 +76,15 @@ export class TimeModeCalculator implements IModeCalculator {
     }
 
     this.init(schedule, dates);
+  }
+
+  groupLessons(lessons: ScheduleLesson[]): ScheduleLesson[][] {
+    return Object.values(
+      groupBy(
+        lessons,
+        (lesson: ScheduleLesson) => `${lesson.startTime.toISO()}-${lesson.endTime.toISO()}`
+      )
+    );
   }
 
   init(schedule: Schedule | GeneralSchedule, dates: DateTime[]): void {
@@ -72,8 +98,8 @@ export class TimeModeCalculator implements IModeCalculator {
   }
 
   height(lessons: (ScheduleLesson | ScheduleGeneralLesson)[]): number {
-    const start = 'startTime' in lessons[0] ? lessons[0].startTime : lessons[0].startTimeMinutes;
-    const end = 'endTime' in lessons[0] ? lessons[0].endTime : lessons[0].endTimeMinutes;
+    const start = lessons[0].startTime;
+    const end = lessons[0].endTime;
 
     return end.diff(start, 'minute').minutes * TimeModeCalculator.scale;
   }
@@ -83,12 +109,12 @@ export class TimeModeCalculator implements IModeCalculator {
   }
 
   y(lessons: (ScheduleLesson | ScheduleGeneralLesson)[]): number {
-    const date = 'startTime' in lessons[0] ? lessons[0].startTime : lessons[0].startTimeMinutes;
+    const date = lessons[0].startTime;
     return this.yTime(date) - this.yOffset;
   }
 
   x(lessons: (ScheduleLesson | ScheduleGeneralLesson)[]): number {
-    const date = 'endTime' in lessons[0] ? lessons[0].endTime : lessons[0].endTimeMinutes;
+    const date = lessons[0].startTime;
     return Math.floor(date.diff(this.start, 'day').days) + 1;
   }
 

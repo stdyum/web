@@ -19,6 +19,8 @@ export interface IModeCalculator {
   initSchedule(schedule: Schedule): void;
   initGeneralSchedule(schedule: GeneralSchedule): void;
 
+  groupLessons(lessons: ScheduleLesson[]): ScheduleLesson[][];
+
   height(lessons: ScheduleLesson[]): number;
 
   width(lessons: ScheduleLesson[]): number;

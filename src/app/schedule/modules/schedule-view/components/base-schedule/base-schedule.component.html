@@ -25,7 +25,7 @@
       }
     </div>
     <div class="lessons-container">
-      @for (lessons of schedule.lessons | groupBy: groupLessonByTime | values; track lessons) {
+      @for (lessons of schedule.lessons | scheduleModeGroupLessons: mode; track lessons) {
         <schedule-cell
           scheduleCellPosition
           [modeCalculator]="mode"

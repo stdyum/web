@@ -15,6 +15,8 @@ import { provideTranslationSuffix, TranslatePipe } from 'i18n';
 import { SkeletonLoaderComponent } from '@shared/components/skeleton-loader/skeleton-loader.component';
 import { BreadcrumbsViewComponent } from '@shared/components/breadcrumbs-view/breadcrumbs-view.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { log } from '@angular-devkit/build-angular/src/builders/ssr-dev-server';
+import { debug } from '@shared/rxjs/pipes/debug.pipe';
 
 @Component({
   selector: 'schedule-header',
@@ -54,8 +56,8 @@ export class ScheduleHeaderComponent implements OnInit, OnDestroy {
     const data: SearchScheduleFormData = info
       ? {
           studyPlaceID: info.studyPlaceId,
-          type: info.column,
-          typename: info.columnName,
+          column: info.column,
+          columnId: info.columnId,
           startDate: 'startDate' in info ? info.startDate : null,
           endDate: 'endDate' in info ? info.endDate : null,
         }
@@ -66,9 +68,10 @@ export class ScheduleHeaderComponent implements OnInit, OnDestroy {
       .afterClosed()
       .pipe(filterNotNull())
       .pipe(map(v => <SearchScheduleFormData>v))
+      .pipe(debug())
       .pipe(
         switchMap(data =>
-          this.router.navigate(['schedule', data.type, data.typename], {
+          this.router.navigate(['schedule', data.column, data.columnId], {
             queryParams: {
               studyPlaceID: data.studyPlaceID,
               startDate: data.startDate,

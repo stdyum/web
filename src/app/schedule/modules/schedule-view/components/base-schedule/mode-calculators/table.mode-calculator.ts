@@ -10,6 +10,7 @@ import {
   ScheduleLesson,
 } from '@schedule/entities/schedule';
 import { DateTime, DurationLikeObject } from 'luxon';
+import { groupBy } from '@shared/arrays/groupBy';
 
 export class TableModeCalculator implements IModeCalculator {
   rows!: Row[];
@@ -63,6 +64,15 @@ export class TableModeCalculator implements IModeCalculator {
     this.markup.pop();
   }
 
+  groupLessons(lessons: ScheduleLesson[]): ScheduleLesson[][] {
+    return Object.values(
+      groupBy(
+        lessons,
+        (lesson: ScheduleLesson) => `${lesson.startTime.weekday}-${lesson.lessonIndex}`
+      )
+    );
+  }
+
   height(_: ScheduleLesson[]): number {
     return this.rowHeight;
   }
@@ -76,7 +86,7 @@ export class TableModeCalculator implements IModeCalculator {
   }
 
   x(lessons: (ScheduleLesson | ScheduleGeneralLesson)[]): number {
-    const date = 'endTime' in lessons[0] ? lessons[0].endTime : lessons[0].endTimeMinutes;
+    const date = lessons[0].endTime;
     return Math.floor(date.diff(this.start, 'day').days) + 1;
   }
 

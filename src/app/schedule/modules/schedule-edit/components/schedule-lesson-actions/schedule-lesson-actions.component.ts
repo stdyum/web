@@ -19,6 +19,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { ConfirmationDialogData } from '@shared/modules/ui/components/dialogs/confirmation-dialog/confirmation-dialog.entities';
 import { provideTranslationSuffix } from 'i18n';
 import { ScheduleAddGeneralLessonDialogComponent } from '@schedule/modules/schedule-edit/dialogs/schedule-add-genral-lesson-dialog/schedule-add-general-lesson-dialog.component';
+import { debug } from '@shared/rxjs/pipes/debug.pipe';
 
 @Component({
   selector: 'schedule-lesson-actions',
@@ -46,7 +47,7 @@ export class ScheduleLessonActionsComponent {
       .open(this.dialogComponent(), { data: this.lesson, injector: this.dialogInjector })
       .afterClosed()
       .pipe(filterNotNull())
-      .pipe(switchMap(lesson => this.service.editLesson(this.lesson.id!, lesson)))
+      .pipe(switchMap(data => this.service.editLesson(this.lesson.id!, data.dto, data.lesson)))
       .subscribe();
   }
 
@@ -57,7 +58,7 @@ export class ScheduleLessonActionsComponent {
       .open(this.dialogComponent(), { data: this.lesson, injector: this.dialogInjector })
       .afterClosed()
       .pipe(filterNotNull())
-      .pipe(switchMap(lesson => this.service.addLesson(lesson)))
+      .pipe(switchMap(data => this.service.addLesson(data.dto, data.lesson)))
       .subscribe();
   }
 

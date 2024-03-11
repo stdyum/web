@@ -10,6 +10,7 @@ import {
   MarkupEntry,
   Row,
 } from '@schedule/modules/schedule-view/components/base-schedule/mode-calculators/base-mode-calculator';
+import { groupBy } from '@shared/arrays/groupBy';
 
 export class ExtendedTableModeCalculator implements IModeCalculator {
   rows!: Row[];
@@ -66,6 +67,10 @@ export class ExtendedTableModeCalculator implements IModeCalculator {
     this.init(schedule, groupedLessons);
   }
 
+  groupLessons(lessons: ScheduleLesson[]): ScheduleLesson[][] {
+    return Object.values(groupBy(lessons, (lesson: ScheduleLesson) => lesson.lessonIndex));
+  }
+
   init(
     schedule: Schedule | GeneralSchedule,
     groupedLessons: {
@@ -97,6 +102,8 @@ export class ExtendedTableModeCalculator implements IModeCalculator {
         }
     );
 
+    console.log(this.rows);
+
     this.markup = this.rows.map(r => <MarkupEntry>{ y: r.y + r.height! + this.rowIndent });
     this.markup.pop();
   }
@@ -115,7 +122,7 @@ export class ExtendedTableModeCalculator implements IModeCalculator {
   }
 
   x(lessons: (ScheduleLesson | ScheduleGeneralLesson)[]): number {
-    const date = 'endTime' in lessons[0] ? lessons[0].endTime : lessons[0].endTimeMinutes;
+    const date = lessons[0].endTime;
     return Math.floor(date.diff(this.start, 'day').days) + 1;
   }
 

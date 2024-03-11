@@ -1,14 +1,15 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SearchScheduleFormData } from '@schedule/dialogs/search-schedule-dialog/search-schedule-dialog.dto';
 import { FormConfig, FormConfigElementTypes } from '@shared/modules/ui/entities/form.config';
 import { Validators } from '@angular/forms';
 import { DateTime } from 'luxon';
-import { ScheduleGeneralLesson } from '@schedule/entities/schedule';
+import { ScheduleGeneralLesson, ScheduleLesson } from '@schedule/entities/schedule';
 import { ScheduleAddLessonService } from '@schedule/modules/schedule-edit/dialogs/schedule-add-lesson-dialog/schedule-add-lesson-dialog.service';
-import { provideTranslationGroup, provideTranslationSuffix } from 'i18n';
+import { provideTranslationGroup } from 'i18n';
 import { ScheduleAddGeneralLessonFormConfig } from '@schedule/modules/schedule-edit/dialogs/schedule-add-genral-lesson-dialog/schedule-add-general-lesson-dialog.dto';
 import { Time } from '@shared/modules/ui/components/datetime/time-picker-view/time-picker-view.component';
+import { DefaultFormComponent } from '@ui/forms/default-form/default-form.component';
 
 @Component({
   selector: 'app-schedule-add-general-lesson-dialog',
@@ -17,7 +18,10 @@ import { Time } from '@shared/modules/ui/components/datetime/time-picker-view/ti
   providers: [provideTranslationGroup(['schedule', 'edit', 'addGeneralLesson'])],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ScheduleAddGeneralLessonDialogComponent implements OnInit {
+export class ScheduleAddGeneralLessonDialogComponent {
+  @ViewChild(DefaultFormComponent, { static: true })
+  public formComponent!: DefaultFormComponent<any, any, any>;
+
   private dialog = inject(MatDialogRef);
   private service = inject(ScheduleAddLessonService);
   private config = inject<ScheduleGeneralLesson | null>(MAT_DIALOG_DATA);
@@ -25,7 +29,7 @@ export class ScheduleAddGeneralLessonDialogComponent implements OnInit {
 
   formConfig: FormConfig<ScheduleAddGeneralLessonFormConfig> = {
     elements: {
-      subjectID: {
+      subjectId: {
         type: FormConfigElementTypes.SEARCHABLE_SELECT,
         typeConfig: {
           label: 'subject',
@@ -34,7 +38,7 @@ export class ScheduleAddGeneralLessonDialogComponent implements OnInit {
         initial: this.config?.subject?.id,
         validators: [Validators.required],
       },
-      teacherID: {
+      teacherId: {
         type: FormConfigElementTypes.SEARCHABLE_SELECT,
         typeConfig: {
           label: 'teacher',
@@ -43,7 +47,7 @@ export class ScheduleAddGeneralLessonDialogComponent implements OnInit {
         initial: this.config?.teacher?.id,
         validators: [Validators.required],
       },
-      groupID: {
+      groupId: {
         type: FormConfigElementTypes.SEARCHABLE_SELECT,
         typeConfig: {
           label: 'group',
@@ -52,7 +56,7 @@ export class ScheduleAddGeneralLessonDialogComponent implements OnInit {
         initial: this.config?.group?.id,
         validators: [Validators.required],
       },
-      roomID: {
+      roomId: {
         type: FormConfigElementTypes.SEARCHABLE_SELECT,
         typeConfig: {
           label: 'room',
@@ -93,29 +97,57 @@ export class ScheduleAddGeneralLessonDialogComponent implements OnInit {
         transform: v => v - 1,
         validators: [Validators.required],
       },
-      startTimeMinutes: {
+      startTime: {
         type: FormConfigElementTypes.TIME,
         typeConfig: { label: 'startTime' },
-        initial: this.extractTime(this.config?.startTimeMinutes),
-        transform: (v: Time) => v.hours * 60 + v.minutes + this.timezoneOffsetMinutes,
+        initial: this.extractTime(this.config?.startTime),
+        transform: (v: Time) =>
+          (v.hours * 60 + v.minutes + this.timezoneOffsetMinutes) * 60000000000,
         validators: [Validators.required],
       },
-      endTimeMinutes: {
+      endTime: {
         type: FormConfigElementTypes.TIME,
         typeConfig: { label: 'endTime' },
-        initial: this.extractTime(this.config?.endTimeMinutes),
-        transform: (v: Time) => v.hours * 60 + v.minutes + this.timezoneOffsetMinutes,
+        initial: this.extractTime(this.config?.endTime),
+        transform: (v: Time) =>
+          (v.hours * 60 + v.minutes + this.timezoneOffsetMinutes) * 60000000000,
         validators: [Validators.required],
       },
     },
   };
 
-  ngOnInit(): void {
-    this.service.load();
-  }
-
   onSubmit(data: SearchScheduleFormData): void {
-    this.dialog.close(data);
+    const raw = this.formComponent.raw();
+
+    const lesson = <ScheduleLesson>{
+      subject: {
+        id: raw.subjectId.value,
+        name: raw.subjectId.display,
+      },
+      teacher: {
+        id: raw.teacherId.value,
+        name: raw.teacherId.display,
+      },
+      group: {
+        id: raw.groupId.value,
+        name: raw.groupId.display,
+      },
+      room: {
+        id: raw.roomId.value,
+        name: raw.roomId.display,
+      },
+      primaryColor: raw.primaryColor.value,
+      secondaryColor: raw.secondaryColor.value,
+      lessonIndex: raw.lessonIndex - 1,
+      startTime: DateTime.fromSeconds(
+        (raw.startTime.minutes + raw.startTime.hours * 60 + this.timezoneOffsetMinutes) * 60
+      ).set({ weekday: raw.dayIndex - 2 }),
+      endTime: DateTime.fromSeconds(
+        (raw.endTime.minutes + raw.endTime.hours * 60 + this.timezoneOffsetMinutes) * 60
+      ).set({ weekday: raw.dayIndex - 2 }),
+    };
+
+    this.dialog.close({ dto: data, lesson: lesson });
   }
 
   private extractTime(datetime: DateTime | null | undefined): Time | undefined {

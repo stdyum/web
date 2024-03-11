@@ -4,6 +4,7 @@ import { z } from 'zod';
 export interface ScheduleLesson {
   id: string;
   studyPlaceId: string;
+  type: 'current' | 'general';
   group: {
     id: string;
     name: string;
@@ -32,8 +33,8 @@ export interface ScheduleGeneralLesson {
   studyPlaceId?: string;
   primaryColor: string;
   secondaryColor?: string;
-  endTimeMinutes: DateTime;
-  startTimeMinutes: DateTime;
+  endTime: DateTime;
+  startTime: DateTime;
   dayIndex: number;
   lessonIndex: number;
   subject: {
@@ -57,6 +58,7 @@ export interface ScheduleGeneralLesson {
 export interface ScheduleInfo {
   studyPlaceId: string;
   column: string;
+  columnId: string;
   columnName: string;
   startDate: DateTime;
   endDate: DateTime;
@@ -65,6 +67,7 @@ export interface ScheduleInfo {
 export interface GeneralScheduleInfo {
   studyPlaceId: string;
   column: string;
+  columnId: string;
   columnName: string;
 }
 
@@ -78,14 +81,10 @@ export interface GeneralSchedule {
   info: GeneralScheduleInfo;
 }
 
-export interface StudyPlaceInfo {
-  id: string;
-  title: string;
-}
-
 export const ScheduleLessonSchema = z.object({
   id: z.string(),
   studyPlaceId: z.string(),
+  type: z.string(),
   startTime: z
     .string()
     .datetime()
@@ -128,6 +127,7 @@ export const ScheduleSchema = z.object({
       .datetime()
       .transform(dt => DateTime.fromISO(dt, { zone: 'utc' })),
     column: z.string(),
+    columnId: z.string(),
     columnName: z.string(),
   }),
 });
@@ -135,35 +135,42 @@ export const ScheduleSchema = z.object({
 export const ScheduleGeneralLessonSchema = z
   .object({
     id: z.string(),
-    studyPlaceID: z.string(),
-    endTimeMinutes: z.number().transform(dt => DateTime.fromSeconds(dt * 60)),
-    startTimeMinutes: z.number().transform(dt => DateTime.fromSeconds(dt * 60)),
+    studyPlaceId: z.string(),
+    startTime: z.number().transform(ms => DateTime.fromMillis(ms / 1000000)),
+    endTime: z.number().transform(ms => DateTime.fromMillis(ms / 1000000)),
     dayIndex: z.number(),
     primaryColor: z.string(),
     secondaryColor: z.string(),
     lessonIndex: z.number(),
-    subject: z.string(),
-    group: z.string(),
-    teacher: z.string(),
-    room: z.string(),
-    subjectID: z.string(),
-    groupID: z.string(),
-    teacherID: z.string(),
-    roomID: z.string(),
+    group: z.object({
+      id: z.string(),
+      name: z.string(),
+    }),
+    room: z.object({
+      id: z.string(),
+      name: z.string(),
+    }),
+    subject: z.object({
+      id: z.string(),
+      name: z.string(),
+    }),
+    teacher: z.object({
+      id: z.string(),
+      name: z.string(),
+    }),
   })
   .transform(l => {
-    l.startTimeMinutes = l.startTimeMinutes.set({ weekday: l.dayIndex - 1 });
-    l.endTimeMinutes = l.endTimeMinutes.set({ weekday: l.dayIndex - 1 });
+    l.startTime = l.startTime.set({ weekday: l.dayIndex - 1 });
+    l.endTime = l.endTime.set({ weekday: l.dayIndex - 1 });
     return l;
   });
 
 export const GeneralScheduleSchema = z.object({
   lessons: z.array(ScheduleGeneralLessonSchema).or(z.null()),
   info: z.object({
-    studyPlaceId: z.object({
-      id: z.string(),
-    }),
-    type: z.string(),
-    typeName: z.string(),
+    studyPlaceId: z.string(),
+    column: z.string(),
+    columnId: z.string(),
+    columnName: z.string(),
   }),
 });

@@ -3,7 +3,11 @@
   <form (ngSubmit)="submit()" [formGroup]="form">
     <ng-content></ng-content>
     @if (formConfig) {
-      <simple-form-config-builder [config]="formConfig" [formGroup]="form" />
+      <simple-form-config-builder
+        #formConfigBuilderComponent
+        [config]="formConfig"
+        [formGroup]="form"
+      />
     }
     <primary-button key="confirm" />
   </form>

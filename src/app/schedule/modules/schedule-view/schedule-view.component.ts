@@ -75,10 +75,13 @@ export class ScheduleViewComponent implements OnInit {
         const startTime = this.route.snapshot.queryParams['startDate'] ?? '2024-02-10T00:00:00Z';
         const endTime = this.route.snapshot.queryParams['endDate'] ?? '2024-03-01T00:00:00Z';
 
+        const column = this.route.snapshot.params['column'] ?? p.schedule.column;
+        const columnId = this.route.snapshot.params['columnId'] ?? p.schedule.columnId;
+
         return {
-          column: p.schedule.column,
-          columnId: p.schedule.columnId,
           studyPlaceId: s.studyPlaceId,
+          column: column,
+          columnId: columnId,
           from: startTime,
           to: endTime,
           general: this.service.display$.value === 'general',

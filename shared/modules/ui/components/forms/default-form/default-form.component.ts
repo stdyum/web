@@ -7,6 +7,7 @@ import {
   Input,
   OnInit,
   Output,
+  ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -97,6 +98,8 @@ export class DefaultFormComponent<
   @Output() invalidSubmit = new EventEmitter<never>();
   @Output() submitResponse = new EventEmitter<Observable<RESPONSE_DATA>>();
   @Output() submitForm = new EventEmitter<PROCEEDED_DATA | null>();
+  @ViewChild('formConfigBuilderComponent')
+  formConfigBuilderComponent!: FormConfigBuilderComponent<CONFIG>;
 
   private http = inject(HttpClient);
   private router = inject(Router);
@@ -143,6 +146,10 @@ export class DefaultFormComponent<
 
   ngAfterViewInit(): void {
     Object.values(this._form.controls).forEach(c => c.updateValueAndValidity({ emitEvent: true }));
+  }
+
+  raw(): any {
+    return this.formConfigBuilderComponent.raw();
   }
 
   submit(): void {

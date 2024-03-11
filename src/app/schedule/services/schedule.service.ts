@@ -13,6 +13,7 @@ import { validate } from '@shared/rxjs/pipes/validate';
 import { GetScheduleDTO } from '@schedule/entities/schedule.dto';
 import { filterNotNull } from '@shared/rxjs/pipes/filterNotNull.pipe';
 import { ToggleSubject } from '@shared/rxjs/subjects/toggle.subject';
+import { debug } from '@shared/rxjs/pipes/debug.pipe';
 
 export type ScheduleMode = 'time' | 'table' | 'tableExpanded';
 export type ScheduleDisplay = 'current' | 'general';
@@ -56,8 +57,9 @@ export class ScheduleService {
 
   getGeneralSchedule(dto: GetScheduleDTO): Observable<GeneralSchedule> {
     return this.http
-      .get<GeneralSchedule>('api/v1/schedule/general', { params: dto ?? {} })
+      .get<GeneralSchedule>('api/schedule/v1/schedule/general', { params: dto ?? {} })
       .pipe(validate(GeneralScheduleSchema))
+      .pipe(debug())
       .pipe(tap(s => this._schedule$.next(s)))
       .pipe(tap(() => (this.isGeneral = true)));
   }

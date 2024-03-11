@@ -9,6 +9,7 @@ import {
   FormConfigElementTypes,
   FormValue,
 } from '@shared/modules/ui/entities/form.config';
+import { debug } from '@shared/rxjs/pipes/debug.pipe';
 
 @Injectable({
   providedIn: 'root',
@@ -57,6 +58,7 @@ export class SimpleFormConfigService {
       return;
 
     element.typeConfig.items = form.controls[element.dependable.dependsOn].valueChanges.pipe(
+      debug(),
       cacheable(v => element.dependable?.dependsItems(v, form.value), element.dependable.cacheable)
     );
   }
