@@ -10,20 +10,19 @@ import { User } from '@shared/entities/user';
   providedIn: 'root',
 })
 export class UserService {
-  private jwtService = inject(JwtService)
-  userPreview$ = this.jwtService.userPreview$
-    .pipe(filterNotNull());
+  private jwtService = inject(JwtService);
+  userPreview$ = this.jwtService.userPreview$.pipe(filterNotNull());
 
   private http = inject(HttpClient);
 
-  user$ = new StorageSubject(
-    () => this.http.get<User>('api/v1/user'),
-    { stopOnError: false, takeFirst: true },
-  );
-
+  user$ = new StorageSubject(() => this.http.get<User>('api/users/v1/self'), {
+    stopOnError: false,
+    takeFirst: true,
+  });
 
   signout(): Observable<void> {
-    return this.http.delete<void>('api/v1/user/signout')
+    return this.http
+      .delete<void>('api/v1/user/signout')
       .pipe(tap(() => this.jwtService.removeTokens()));
   }
 

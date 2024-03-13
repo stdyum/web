@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SearchScheduleFormData } from '@schedule/dialogs/search-schedule-dialog/search-schedule-dialog.dto';
 import { FormConfig, FormConfigElementTypes } from '@shared/modules/ui/entities/form.config';
 import { Validators } from '@angular/forms';
-import { DateTime } from 'luxon';
+import { DateTime, WeekdayNumbers } from 'luxon';
 import { ScheduleGeneralLesson, ScheduleLesson } from '@schedule/entities/schedule';
 import { ScheduleAddLessonService } from '@schedule/modules/schedule-edit/dialogs/schedule-add-lesson-dialog/schedule-add-lesson-dialog.service';
 import { provideTranslationGroup } from 'i18n';
@@ -141,10 +141,10 @@ export class ScheduleAddGeneralLessonDialogComponent {
       lessonIndex: raw.lessonIndex - 1,
       startTime: DateTime.fromSeconds(
         (raw.startTime.minutes + raw.startTime.hours * 60 + this.timezoneOffsetMinutes) * 60
-      ).set({ weekday: raw.dayIndex - 2 }),
+      ).set({ weekday: (raw.dayIndex - 2) as WeekdayNumbers }),
       endTime: DateTime.fromSeconds(
         (raw.endTime.minutes + raw.endTime.hours * 60 + this.timezoneOffsetMinutes) * 60
-      ).set({ weekday: raw.dayIndex - 2 }),
+      ).set({ weekday: (raw.dayIndex - 2) as WeekdayNumbers }),
     };
 
     this.dialog.close({ dto: data, lesson: lesson });

@@ -9,7 +9,7 @@ import {
   ScheduleGeneralLesson,
   ScheduleLesson,
 } from '@schedule/entities/schedule';
-import { DateObjectUnits, DateTime, DurationLikeObject } from 'luxon';
+import { DateObjectUnits, DateTime, DurationLikeObject, WeekdayNumbers } from 'luxon';
 import { groupBy } from '@shared/arrays/groupBy';
 
 export class TimeModeCalculator implements IModeCalculator {
@@ -62,7 +62,9 @@ export class TimeModeCalculator implements IModeCalculator {
     ]);
 
     const dayIndexes = schedule.lessons.map(l => l.dayIndex);
-    this.start = DateTime.fromMillis(0).set({ weekday: Math.min(...dayIndexes) - 1 });
+    this.start = DateTime.fromMillis(0).set({
+      weekday: (Math.min(...dayIndexes) - 1) as WeekdayNumbers,
+    });
 
     this.yOffset = this.yTime(
       dates.reduce((a, b) => (a < b ? a : b), schedule.lessons[0].startTime)

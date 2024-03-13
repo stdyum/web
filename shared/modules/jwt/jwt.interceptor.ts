@@ -51,13 +51,9 @@ export const jwtInterceptor: HttpInterceptorFn = (
     const httpErr: HttpErrorResponse = err as HttpErrorResponse;
     if (httpErr.status !== 401) return throwError(() => err);
 
-    if (httpErr.error === 'access token has expired') {
-      service.removeTokens();
-      router.navigate(['']).then();
-      return throwError(() => err);
-    }
-
-    return service.isUpdating ? waitUpdateAndExecute() : updateAndExecute();
+    service.removeTokens();
+    router.navigate(['']).then();
+    return throwError(() => err);
   };
 
   if (service.isUpdating) return waitUpdateAndExecute();

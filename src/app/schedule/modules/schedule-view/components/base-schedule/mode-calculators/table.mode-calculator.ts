@@ -9,7 +9,7 @@ import {
   ScheduleGeneralLesson,
   ScheduleLesson,
 } from '@schedule/entities/schedule';
-import { DateTime, DurationLikeObject } from 'luxon';
+import { DateTime, DurationLikeObject, WeekdayNumbers } from 'luxon';
 import { groupBy } from '@shared/arrays/groupBy';
 
 export class TableModeCalculator implements IModeCalculator {
@@ -38,7 +38,9 @@ export class TableModeCalculator implements IModeCalculator {
 
   initGeneralSchedule(schedule: GeneralSchedule): void {
     const dayIndexes = schedule.lessons.map(l => l.dayIndex);
-    this.start = DateTime.fromMillis(0).set({ weekday: Math.min(...dayIndexes) - 1 });
+    this.start = DateTime.fromMillis(0).set({
+      weekday: (Math.min(...dayIndexes) - 1) as WeekdayNumbers,
+    });
 
     this.days = [];
     for (let i = Math.min(...dayIndexes) - 1; i < Math.max(...dayIndexes); i++) {

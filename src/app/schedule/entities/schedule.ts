@@ -1,4 +1,4 @@
-import { DateTime } from 'luxon';
+import { DateTime, WeekdayNumbers } from 'luxon';
 import { z } from 'zod';
 
 export interface ScheduleLesson {
@@ -160,8 +160,8 @@ export const ScheduleGeneralLessonSchema = z
     }),
   })
   .transform(l => {
-    l.startTime = l.startTime.set({ weekday: l.dayIndex - 1 });
-    l.endTime = l.endTime.set({ weekday: l.dayIndex - 1 });
+    l.startTime = l.startTime.set({ weekday: (l.dayIndex - 1) as WeekdayNumbers });
+    l.endTime = l.endTime.set({ weekday: (l.dayIndex - 1) as WeekdayNumbers });
     return l;
   });
 

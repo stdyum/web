@@ -10,6 +10,7 @@ import { DatetimeModule } from '@shared/modules/ui/components/datetime/datetime.
 import { CarouselsModule } from '@shared/modules/ui/components/carousels/carousels.module';
 import { ContainersModule } from '@shared/modules/ui/components/containers/containers.module';
 import { FilesModule } from '@shared/modules/ui/components/files/files.module';
+import { TablesModule } from '@shared/modules/ui/components/tables/tables.module';
 
 @NgModule({
   imports: [
@@ -24,6 +25,7 @@ import { FilesModule } from '@shared/modules/ui/components/files/files.module';
     CarouselsModule,
     ContainersModule,
     FilesModule,
+    TablesModule,
   ],
   exports: [
     TextModule,
@@ -37,6 +39,7 @@ import { FilesModule } from '@shared/modules/ui/components/files/files.module';
     CarouselsModule,
     ContainersModule,
     FilesModule,
+    TablesModule,
   ],
 })
 export class UiModule {}
