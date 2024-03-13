@@ -93,6 +93,9 @@
       "@user/*": [
         "src/app/user/*"
       ],
+      "@panel/*": [
+        "src/app/panel/*"
+      ],
       "i18n": [
         "dist/i18n"
       ],
