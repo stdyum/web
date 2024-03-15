@@ -1,7 +1,7 @@
 @use "@angular/material" as mat;
 
 .density-input-min3 {
-  @include mat.private-form-field-density(-3);
+  @include mat.form-field-density(-3);
 }
 
 .density-button-min3 {

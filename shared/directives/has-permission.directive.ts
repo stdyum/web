@@ -42,5 +42,6 @@ export class HasPermissionDirective implements OnInit, OnDestroy {
   private placeItem(): void {
     this.embeddedView?.destroy();
     this.embeddedView = this.viewContainerRef.createEmbeddedView(this.templateRef);
+    this.embeddedView.detectChanges();
   }
 }

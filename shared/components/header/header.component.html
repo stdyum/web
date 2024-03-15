@@ -13,6 +13,8 @@
         @if (user$ | async) {
           <url key="journal" link="journal" />
         }
+
+        <url *hasPermission="'admin'" key="panel" link="panel" />
       </nav>
       <nav class="nav-bar nav-bar-sm">
         <url link="schedule">
@@ -23,6 +25,9 @@
             <icon src="book" />
           </url>
         }
+        <url link="panel">
+          <icon *hasPermission="'admin'" src="table_view" />
+        </url>
       </nav>
       <v-divider />
 

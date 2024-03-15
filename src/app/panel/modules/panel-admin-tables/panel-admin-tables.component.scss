@@ -1,0 +1,21 @@
+@import "indents";
+
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+container-primary {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: $indent4;
+}
+
+mat-sidenav-container {
+  width: 100%;
+  height: 100%;
+  --mat-sidenav-content-background-color: transparent;
+  --mat-sidenav-container-background-color: transparent;
+}

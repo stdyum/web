@@ -1,0 +1,18 @@
+@if (enrollment | async) {
+  @if (selectedTable(); as selectedTable) {
+    @switch (selectedTable) {
+      @case ("groups") {
+        <panel-admin-tables-page-groups />
+      }
+      @case ("rooms") {
+        <panel-admin-tables-page-rooms />
+      }
+      @case ("subjects") {
+        <panel-admin-tables-page-subjects />
+      }
+      @case ("teachers") {
+        <panel-admin-tables-page-teachers />
+      }
+    }
+  }
+}

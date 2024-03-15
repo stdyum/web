@@ -1,0 +1,9 @@
+@if (selectedTablePage(); as selectedTablePage) {
+  @for (item of items; track item.url) {
+    <url [link]="item.url">
+      <toggle-button class="button-icon" [key]="item.key" [toggled]="selectedTablePage === item.id">
+        <icon [src]="item.icon"></icon>
+      </toggle-button>
+    </url>
+  }
+}

@@ -200,11 +200,17 @@ export class DefaultFormComponent<
     const value = this.proceedValue(formValue as DATA);
     this.submitForm.emit(value);
 
-    if (this.submitOptions.url) this._makeHttpRequest(value);
+    if (this.submitOptions.url || !!this.formConfig?.onSubmit) this._makeHttpRequest(value);
     if (!this.submitOptions.url && this.submitRedirect) this.redirect();
   }
 
   private _makeHttpRequest(value: PROCEEDED_DATA | null): void {
+    if (!!this.formConfig?.onSubmit) {
+      const submit$ = this.formConfig.onSubmit(value);
+      this.submitResponse.emit(submit$);
+      return;
+    }
+
     if (!this.submitOptions.url) return;
 
     if (!value) return;

@@ -6,4 +6,8 @@ export const routes: Routes = [
     path: ':table',
     component: PanelAdminTablesComponent,
   },
+  {
+    path: '**',
+    redirectTo: 'groups',
+  },
 ];

@@ -104,8 +104,6 @@ export class ExtendedTableModeCalculator implements IModeCalculator {
         }
     );
 
-    console.log(this.rows);
-
     this.markup = this.rows.map(r => <MarkupEntry>{ y: r.y + r.height! + this.rowIndent });
     this.markup.pop();
   }

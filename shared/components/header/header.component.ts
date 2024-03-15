@@ -9,6 +9,7 @@ import { ImagesModule } from '@ui/images';
 import { DividersModule } from '@ui/dividers';
 import { PrimaryContainerComponent } from '@shared/modules/ui/components/containers/primary-container.component';
 import { provideTranslationSuffix, TranslateGroupPipe, TranslatePipe } from 'i18n';
+import { HasPermissionDirective } from '@shared/directives/has-permission.directive';
 
 @Component({
   selector: 'app-header',
@@ -24,6 +25,7 @@ import { provideTranslationSuffix, TranslateGroupPipe, TranslatePipe } from 'i18
     PrimaryContainerComponent,
     TranslateGroupPipe,
     TranslatePipe,
+    HasPermissionDirective,
   ],
   providers: [provideTranslationSuffix('header')],
 })

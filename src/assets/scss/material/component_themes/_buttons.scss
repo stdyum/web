@@ -1,0 +1,25 @@
+@use "@angular/material" as mat;
+@import "indents";
+
+@mixin button-theme($theme) {
+  .button-primary {
+    @include mat.button-color($theme, $color-variant: primary);
+  }
+  .button-secondary {
+    @include mat.button-color($theme, $color-variant: secondary);
+  }
+  .button-tertiary {
+    @include mat.button-color($theme, $color-variant: tertiary);
+  }
+  .button-error {
+    @include mat.button-color($theme, $color-variant: error);
+  }
+
+  .button-icon {
+    .mdc-button__label {
+      display: flex;
+      gap: $indent1;
+      align-items: center;
+    }
+  }
+}

@@ -9,6 +9,10 @@ export const routes: Routes = [
     path: 'journal',
     loadChildren: () => import('@journal/journal.module').then(m => m.JournalModule),
   },
+  {
+    path: 'panel',
+    loadChildren: () => import('@panel/panel.module').then(m => m.PanelModule),
+  },
   { path: 'user', loadChildren: () => import('@user/user.module').then(m => m.UserModule) },
   { path: '', loadChildren: () => import('@home/home.module').then(m => m.HomeModule) },
 ];

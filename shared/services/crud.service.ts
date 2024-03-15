@@ -15,10 +15,18 @@ export class CrudService<T, DTO = T, ID = string> {
 
   constructor(@Inject(CRUD_URL_TOKEN) protected url: string) {}
 
-  list(query: any = {}, data: any = null): Observable<T[]> {
+  set actions(a: { [key: string]: (response: any, request: any, data: any) => void }) {
+    this.onAction = a;
+  }
+
+  list(
+    query: any = {},
+    data: any = null,
+    schema: z.Schema = z.array(this.schema ?? z.any())
+  ): Observable<T[]> {
     return this.http
       .get<T[]>(this.url, { params: this.concatQuery(query) })
-      .pipe(validate(z.array(this.schema ?? z.any())))
+      .pipe(validate(schema))
       .pipe(this.applyAction('LIST', null, data));
   }
 
@@ -53,6 +61,12 @@ export class CrudService<T, DTO = T, ID = string> {
     return this.http
       .delete<void>(`${this.url}/${id}`, { params: this.concatQuery(query) })
       .pipe(this.applyAction('DELETE', previous, data));
+  }
+
+  deleteList(ids: ID[], query: any = {}, data: any = null): Observable<void> {
+    return this.http
+      .delete<void>(this.url, { params: this.concatQuery(query), body: { ids: ids } })
+      .pipe(this.applyAction('DELETE', ids, data));
   }
 
   private applyAction<O, T, D>(

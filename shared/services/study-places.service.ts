@@ -19,7 +19,6 @@ export class StudyPlacesService {
   private route = inject(ActivatedRoute);
 
   private _userStudyPlace: StudyPlace | null = null;
-  private _userEnrollment: any | null = null;
 
   get userStudyPlace(): Observable<any> {
     if (this._userStudyPlace) return of(this._userStudyPlace);
@@ -30,6 +29,8 @@ export class StudyPlacesService {
       .pipe(tap(s => (this._userStudyPlace = s)));
   }
 
+  private _userEnrollment: any | null = null;
+
   get userEnrollment(): Observable<any> {
     if (this._userEnrollment) return of(this._userEnrollment);
 
@@ -37,6 +38,10 @@ export class StudyPlacesService {
       .get<any>('api/studyplaces/v1/enrollments')
       .pipe(map(e => e.items[0]))
       .pipe(tap(s => (this._userEnrollment = s)));
+  }
+
+  get currentUserEnrollment(): any | null {
+    return this._userEnrollment;
   }
 
   get currentID(): string | null {

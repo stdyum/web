@@ -2,12 +2,33 @@ import { FormControl, ValidatorFn } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { SelectItems } from '@shared/modules/ui/entities/select';
 import { DateTime } from 'luxon';
+import { HttpClient } from '@angular/common/http';
 
 export type FormValue<V extends Object> = V | Observable<V> | (() => FormValue<V>);
+
+export interface HttpOnSubmitConfig {
+  url: string;
+  method: string;
+  list?: boolean;
+  options?: object;
+}
+
+export function httpOnSubmit(
+  http: HttpClient,
+  config: HttpOnSubmitConfig
+): (body: any) => Observable<any> {
+  return (body: any): Observable<any> => {
+    return http.request(config.method, config.url, {
+      ...config.options,
+      body: config.list ? { list: [body] } : body,
+    });
+  };
+}
 
 export interface FormConfig<T extends FormConfigElements<T>, V extends Object = any> {
   elements: T;
   value?: FormValue<V>;
+  onSubmit?: (body: any) => Observable<any>;
 }
 
 export interface BaseFormConfigElement<T> {

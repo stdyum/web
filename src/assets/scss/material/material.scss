@@ -1,9 +1,12 @@
 @use "@angular/material" as mat;
+@use "@angular/material-experimental" as matx;
+
 @import "icons";
 @import "themes";
 @import "indents";
 @import "densities";
 @import "snackbar";
+@import "component_themes/component_themes";
 
 @include mat.core();
 
@@ -13,11 +16,13 @@
 
 body.light {
   @import "themes/light";
+  @include component-theme($theme);
   @include mat-theme($theme);
 }
 
 body {
   @import "themes/dark";
+  @include component-theme($theme);
   @include mat.all-component-themes($theme);
 }
 
