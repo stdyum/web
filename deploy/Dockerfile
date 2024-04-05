@@ -1,13 +1,20 @@
+# Build Angular project
 FROM node:lts as node
 WORKDIR /app
-COPY package.json .
-COPY package-lock.json .
+
+COPY package.json package-lock.json ./
 RUN npm ci
+
 COPY . .
 RUN npm run build-state-mapper
 RUN npm run build-i18n
 RUN npm run build --omit=dev
 
+# Using Nginx webserver
 FROM nginx:alpine
+
 COPY deploy/nginx.conf /etc/nginx/nginx.conf
+COPY deploy/nginx.proxy.conf /etc/nginx/nginx.proxy.conf
+RUN nginx -t
+
 COPY --from=node  /app/dist/studyum /usr/share/nginx/html
