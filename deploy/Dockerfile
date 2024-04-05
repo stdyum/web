@@ -3,7 +3,7 @@ FROM node:lts as node
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm ci --maxsockets 1
 
 COPY . .
 RUN npm run build-state-mapper
