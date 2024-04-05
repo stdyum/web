@@ -1,3 +1,5 @@
+# syntax=docker.io/docker/dockerfile:1.7-labs
+
 # Build Angular project
 FROM node:lts as node
 WORKDIR /app
@@ -5,7 +7,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --maxsockets 1
 
-COPY . .
+COPY --exclude=deploy . .
 RUN npm run build-state-mapper
 RUN npm run build-i18n
 RUN npm run build --omit=dev
