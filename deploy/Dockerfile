@@ -15,6 +15,5 @@ FROM nginx:alpine
 
 COPY deploy/nginx.conf /etc/nginx/nginx.conf
 COPY deploy/nginx.proxy.conf /etc/nginx/nginx.proxy.conf
-RUN nginx -t
 
 COPY --from=node  /app/dist/studyum /usr/share/nginx/html
