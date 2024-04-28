@@ -2,25 +2,8 @@ name: CI CD
 
 on: [ push ]
 jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 'latest'
-          cache: 'npm'
-
-      - run: npm ci
-      - run: npm run build-state-mapper
-      - run: npm run build-i18n
-      - run: npm run build --omit=dev
-
   deploy:
     runs-on: ubuntu-latest
-    needs: [build-and-test]
     steps:
       - name: Deploy
         uses: fjogeleit/http-request-action@v1.15.4
